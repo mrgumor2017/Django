@@ -79,23 +79,30 @@ WSGI_APPLICATION = 'Django.wsgi.application'
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from urllib.parse import urlparse
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables
-load_dotenv(BASE_DIR / '.env')
+load_dotenv()
+
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neondb',
-        'USER': 'neondb_owner',
-        'PASSWORD': 'npg_MK2NW3jULFys',
-        'HOST': 'ep-floral-breeze-a2sevso1-pooler.eu-central-1.aws.neon.tech',
+        'NAME': tmpPostgres.path[1:],  # видаляємо початковий слеш
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
         'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require'
+        }
     }
 }
+
 
 
 # Password validation
@@ -133,6 +140,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# налаштування для медіафайлів
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# користувацьку модель як модель за замовчуванням
+AUTH_USER_MODEL = 'polls.CustomUser'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
