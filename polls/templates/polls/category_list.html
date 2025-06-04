@@ -1,23 +1,30 @@
-{% extends "base.html" %}
+{% extends "polls/base.html" %}
 
-{% block title %}Poll Categories{% endblock %}
+{% block title %}Категорії тварин{% endblock %}
 
 {% block content %}
     <div class="categories">
-        <h1>Poll Categories</h1>
+        <h1>Категорії тварин</h1>
         {% if categories %}
-            <ul class="category-list">
+            <div class="row">
                 {% for category in categories %}
-                    <li class="category-item">
-                        <h2>{{ category.name }}</h2>
-                        {% if category.description %}
-                            <p>{{ category.description }}</p>
-                        {% endif %}
-                    </li>
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 class="card-title">{{ category.name }}</h2>
+                                {% if category.description %}
+                                    <p class="card-text">{{ category.description }}</p>
+                                {% endif %}
+                                <p class="card-text">
+                                    <small class="text-muted">Кількість тварин: {{ category.animals.count }}</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         {% else %}
-            <p>No categories available.</p>
+            <p>Категорії відсутні.</p>
         {% endif %}
     </div>
 {% endblock %}
