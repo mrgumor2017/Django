@@ -1,0 +1,49 @@
+{% extends "polls/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Список користувачів</h2>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for user in users %}
+        <div class="col">
+            <div class="card h-100">
+                {% if user.image_medium %}
+                    <img src="{{ user.image_medium.url }}" 
+                         class="card-img-top" 
+                         alt="{{ user.get_full_name }}"
+                         style="object-fit: cover; height: 200px;">
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                         style="height: 200px;">
+                        <i class="bi bi-person-circle" style="font-size: 4rem;"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.get_full_name }}</h5>
+                    <p class="card-text">
+                        <i class="bi bi-envelope"></i> {{ user.email }}
+                    </p>
+                    {% if user.date_joined %}
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i> 
+                            Приєднався: {{ user.date_joined|date:"d.m.Y" }}
+                        </small>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Поки що немає зареєстрованих користувачів.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
