@@ -50,3 +50,23 @@ class Animal(models.Model):
     class Meta:
         verbose_name = 'Тварина'
         verbose_name_plural = 'Тварини'
+
+class Post(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
+    content = models.TextField(verbose_name="Зміст")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата створення")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата оновлення")
+    author = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='posts',
+        verbose_name="Автор"
+    )
+    
+    class Meta:
+        verbose_name = "Новина"
+        verbose_name_plural = "Новини"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.title

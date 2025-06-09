@@ -1,6 +1,35 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
+from .models import Post
+from django.contrib.auth.forms import AuthenticationForm
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        label="Email або Логін",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введіть email або логін'
+        })
+    )
+    password = forms.CharField(
+        label="Пароль",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введіть пароль'
+        })
+    )
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(

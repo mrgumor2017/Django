@@ -1,0 +1,52 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Новини</h2>
+    
+    {% if user.is_authenticated %}
+    <div class="mb-4">
+        <a href="{% url 'polls:post_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Створити новину
+        </a>
+    </div>
+    {% endif %}
+    
+    {% for post in posts %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+                <div class="me-3">
+                    {% if post.author.image_small %}
+                        <img src="{{ post.author.image_small.url }}" 
+                             alt="{{ post.author.get_full_name }}"
+                             class="rounded-circle"
+                             style="width: 50px; height: 50px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
+                             style="width: 50px; height: 50px;">
+                            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <h5 class="card-title mb-1">{{ post.title }}</h5>
+                    <p class="card-subtitle mb-0 text-muted">
+                        <small>
+                            Автор: {{ post.author.first_name }} {{ post.author.last_name }}
+                            <br>
+                            {{ post.created_at|date:"d.m.Y H:i" }}
+                        </small>
+                    </p>
+                </div>
+            </div>
+            <p class="card-text">{{ post.content }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">
+        Поки що немає жодної новини.
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
