@@ -29,7 +29,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <div>
+                <div class="flex-grow-1">
                     <h5 class="card-title mb-1">{{ post.title }}</h5>
                     <p class="card-subtitle mb-0 text-muted">
                         <small>
@@ -39,8 +39,19 @@
                         </small>
                     </p>
                 </div>
+                {% if user == post.author %}
+                <div class="ms-3">
+                    <a href="{% url 'polls:post_edit' post.pk %}" class="btn btn-sm btn-outline-primary me-2">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="{% url 'polls:post_delete' post.pk %}" class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Ви впевнені, що хочете видалити цю новину?')">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+                {% endif %}
             </div>
-            <p class="card-text">{{ post.content }}</p>
+            <div class="card-text">{{ post.content|safe }}</div>
         </div>
     </div>
     {% empty %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout,authenticate
 from .models import Category, Animal, CustomUser
 from django.contrib.auth.decorators import login_required
@@ -9,7 +9,7 @@ from django.views.generic import ListView
 from .models import Post
 from .forms import PostForm
 from .forms import LoginForm
-
+from django.http import HttpResponseForbidden
 
 class PostListView(ListView):
     model = Post
@@ -31,6 +31,31 @@ def post_create(request):
         form = PostForm()
     return render(request, 'posts/post_create.html', {'form': form})
 
+@login_required
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if post.author != request.user:
+        return HttpResponseForbidden("У вас немає прав на редагування цього поста")
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Новину успішно оновлено!')
+            return redirect('polls:post_list')
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'posts/post_create.html', {'form': form})
+
+@login_required
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if post.author != request.user:
+        return HttpResponseForbidden("У вас немає прав на видалення цього поста")
+    
+    post.delete()
+    messages.success(request, 'Новину успішно видалено!')
+    return redirect('polls:post_list')
 
 
 def index(request):

@@ -1,12 +1,17 @@
 {% extends 'polls/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+{{ form.media }}
+{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="mb-0">Створення нової новини</h2>
+                    <h2 class="mb-0">{% if form.instance.pk %}Редагування{% else %}Створення{% endif %} новини</h2>
                 </div>
                 <div class="card-body">
                     <form method="post">
@@ -35,7 +40,9 @@
                             {% endif %}
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Опублікувати</button>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}Зберегти{% else %}Опублікувати{% endif %}
+                            </button>
                         </div>
                     </form>
                 </div>
